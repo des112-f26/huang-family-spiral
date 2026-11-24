@@ -1,0 +1,117 @@
+body{margin:0;background:#FBFAF5}
+
+button{font-family:inherit}
+
+.pulp{background-color:#FBFAF5;background-image:url(../assets/paper-pulp.png);background-size:512px 512px}
+
+.riso{-webkit-mask-image:url(../assets/riso-mask.png);mask-image:url(../assets/riso-mask.png);-webkit-mask-size:256px 256px;mask-size:256px 256px}
+
+.speck{background-image:url(../assets/riso-speck.png);background-size:256px 256px}
+
+.mis{position:relative;display:inline-block}
+
+.mis::after{content:attr(data-t);position:absolute;left:0;top:0;mix-blend-mode:multiply;pointer-events:none;white-space:nowrap}
+
+.mg::after{color:#1E6A44;transform:translate(-5px,4px);opacity:.7}
+
+.nowPulse{animation:nowPulse 1.8s ease-out infinite}
+
+@keyframes nowPulse{0%{stroke-width:2px;opacity:.95}
+100%{stroke-width:28px;opacity:0}
+}
+
+.tearA{animation:tearA 820ms cubic-bezier(.45,.05,.55,.95) forwards}
+
+.tearB{animation:tearB 820ms cubic-bezier(.45,.05,.55,.95) forwards}
+
+@keyframes tearA{0%{transform:none;opacity:1}
+18%{transform:translate(4px,-6px) rotate(-2deg);opacity:1}
+100%{transform:translate(180px,-150px) rotate(28deg);opacity:0}
+}
+
+@keyframes tearB{0%{transform:none;opacity:1}
+18%{transform:translate(4px,-6px) rotate(-2deg);opacity:1}
+100%{transform:translate(180px,-150px) rotate(28deg);opacity:0}
+}
+
+.dropA{animation:dropA 420ms ease-out}
+
+.dropB{animation:dropB 420ms ease-out}
+
+@keyframes dropA{0%{transform:translateY(-22px) rotate(-1.5deg);opacity:0}
+100%{transform:none;opacity:1}
+}
+
+@keyframes dropB{0%{transform:translateY(-22px) rotate(-1.5deg);opacity:0}
+100%{transform:none;opacity:1}
+}
+
+@media (prefers-reduced-motion: reduce){.nowPulse{animation:none;opacity:0}
+.tearA,.tearB{animation:tearFade 300ms forwards}
+.dropA,.dropB{animation:none}
+}
+
+@keyframes tearFade{to{opacity:0}
+}
+
+@keyframes threadGlow{0%,100%{opacity:.7}
+50%{opacity:1}
+}
+
+.threadGlow{animation:threadGlow 3.2s ease-in-out infinite}
+
+@keyframes unfoldA{0%{transform:rotate(-1.5deg) scaleY(.08);opacity:0}
+60%{transform:rotate(-1.5deg) scaleY(1.04);opacity:1}
+100%{transform:rotate(-1.5deg) scaleY(1);opacity:1}
+}
+
+@keyframes unfoldB{0%{transform:rotate(-1.5deg) scaleY(.08);opacity:0}
+60%{transform:rotate(-1.5deg) scaleY(1.04);opacity:1}
+100%{transform:rotate(-1.5deg) scaleY(1);opacity:1}
+}
+
+.unfoldA{animation:unfoldA .5s cubic-bezier(.2,.8,.3,1) both}
+
+.unfoldB{animation:unfoldB .5s cubic-bezier(.2,.8,.3,1) both}
+
+button:focus-visible,input:focus-visible{outline:3px solid #1E6A44;outline-offset:2px}
+
+
+/* ---------- static-site additions ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}
+img,svg{max-width:100%}
+.noscript{max-width:640px;margin:48px auto;padding:0 16px;font-family:Nunito,sans-serif;color:#33261D}
+
+/* Stack the spiral and the almanac column once they no longer fit side by side */
+@media (max-width: 1120px){
+  .layout{gap:24px !important}
+  .col-spiral{flex:1 1 100% !important;max-width:700px !important}
+  .col-side{flex:1 1 100% !important;max-width:560px !important}
+}
+
+/* Tablets and phones */
+@media (max-width: 720px){
+  .page{padding:16px 16px 28px !important}
+  .hdr-bar{padding:10px 14px !important;gap:8px !important}
+  .hdr-pair{gap:12px !important;flex-wrap:wrap}
+  .hdr-big{font-size:clamp(30px,8.4vw,54px) !important}
+  .hdr-zh{font-size:clamp(26px,7.2vw,46px) !important}
+  .hdr-year{text-align:left !important}
+  .scale-btns{flex-wrap:wrap}
+  .controls{padding:10px 8px !important;gap:8px !important}
+  .controls .zoom-slider{order:-1;flex:1 1 100% !important}
+  .controls button{flex:1 1 auto;justify-content:center}
+}
+
+/* Small phones */
+@media (max-width: 420px){
+  .scale-btns button{padding:6px 10px !important;font-size:14px !important}
+  .range-text{font-size:16px !important}
+  .key{gap:8px 12px !important;font-size:11px !important}
+  .alm-day{font-size:170px !important}
+  .alm-halo{width:200px !important;height:200px !important}
+}
+

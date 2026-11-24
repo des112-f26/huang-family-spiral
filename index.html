@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huang Family Spiral · 黃家曆</title>
+<meta name="description" content="A shared family timeline drawn as a spiral almanac: zoom in to the past, out to the future, and see the days that come back every turn.">
+<meta name="theme-color" content="#9E2B25">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Coustard:wght@400;900&amp;family=Nunito:wght@400;600;700;800;900&amp;family=Noto+Serif+TC:wght@500;700;900&amp;family=Archivo+Narrow:wght@400;600&amp;display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app"></div>
+<noscript><p class="noscript">The Huang Family Spiral is interactive and needs JavaScript turned on.</p></noscript>
+<template id="app-template">
+<div class="page pulp" style="min-height: 100vh; box-sizing: border-box; padding: 24px 28px 36px; font-family: 'Nunito', 'Noto Serif TC', sans-serif; color: #33261D">
+<div style="max-width: 1440px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+
+<header style="display: flex; flex-direction: column; gap: 4px">
+<div style="border-top: 3px solid #9E2B25; border-bottom: 1px solid #9E2B25; height: 3px"></div>
+<div class="hdr-bar riso" style="position: relative; overflow: hidden; background: #9E2B25; color: #FBFAF5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 22px">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#FBFAF5 1.7px, transparent 2.1px); background-size: 8px 8px; opacity: 0.32; -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 55%, black 100%); mask-image: linear-gradient(to right, transparent 0%, transparent 55%, black 100%)"></div>
+<h1 style="position: relative; margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 22px; letter-spacing: 0.2em">黃家曆<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%)"> The Huang Family Spiral</span></h1>
+<span class="hdr-pair" style="position: relative; display: flex; align-items: baseline; gap: 26px">
+<span class="hdr-big mis mg" data-t="2026 NOVEMBER" style="font-family: 'Coustard', serif; font-weight: 900; font-size: 54px; line-height: 1">2026 NOVEMBER</span>
+<span class="hdr-zh mis mg" data-t="十一月小" style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 46px; line-height: 1">十一月小</span>
+</span>
+<span class="hdr-year" style="position: relative; font-family: 'Coustard', serif; font-size: 15px; letter-spacing: 0.06em; text-align: right; line-height: 1.2">YEAR OF THE HORSE<br><span style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 18px">丙午 馬年</span></span>
+</div>
+<div style="border-top: 1px solid #9E2B25; border-bottom: 3px solid #9E2B25; height: 3px"></div>
+</header>
+
+<div class="layout" style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: center">
+
+
+<main class="col-spiral" style="position: relative; z-index: 20; flex: 0 1 700px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px">
+<div class="scale-btns" role="group" aria-label="Scale of time" style="display: flex; gap: 6px">
+<sc-for list="{{scaleBtns}}" as="b" hint-placeholder-count="3">
+<button type="button" onClick="{{b.pick}}" aria-pressed="{{b.pressed}}" class="{{b.cls}}" style="min-height: 44px; padding: 6px 14px; border: 2px solid #9E2B25; background: {{b.bg}}; color: {{b.fg}}; cursor: pointer; font-family: 'Coustard', serif; font-size: 15px"><span style="font-family: 'Noto Serif TC', serif; font-weight: 900">{{b.zh}}</span> {{b.en}}</button>
+</sc-for>
+</div>
+<span class="range-text" style="font-family: 'Coustard', serif; font-size: 18px; color: #1E6A44">{{rangeText}}</span>
+</div>
+<div class="key" aria-label="Key" style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #33261D">
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 16px; background: #D2564B; border: 2px solid #9E2B25"></span>FESTIVAL DAY</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 16px; background: #F6DE9F; border: 2px solid #9E2B25"></span>SOMETHING PINNED</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 16px; background: #DCEBDD; border: 2px solid #9E2B25"></span>FAMILY TRADITION</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 16px; background: #FBEDE8; border: 2px solid #9E2B25"></span>STILL AHEAD</span>
+</div>
+<div role="group" aria-label="Whose eyes the spiral looks through" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; border-top: 1.5px solid #9E2B25; border-bottom: 1.5px solid #9E2B25; padding: 5px 0">
+<span style="font-size: 11px; font-weight: 900; letter-spacing: 0.12em; color: #9E2B25; margin-right: 6px">SEEN BY</span>
+<sc-for list="{{lensList}}" as="m" hint-placeholder-count="6">
+<button type="button" onClick="{{m.pick}}" aria-pressed="{{m.pressed}}" title="{{m.name}}, born {{m.born}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 3px 10px 3px 3px; border: none; border-radius: 999px; background: {{m.chipBg}}; color: {{m.chipFg}}; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 800">
+<span aria-hidden="true" style="width: 24px; height: 24px; flex: none; background: {{m.chipSealBg}}; color: {{m.chipSealFg}}; border-radius: {{m.radius}}; display: inline-flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 13px">{{m.ch}}</span>{{m.name}}<span style="font-family: 'Coustard', serif; font-weight: 900; font-size: 12px; opacity: 0.75">{{m.age}}</span>
+</button>
+</sc-for>
+</div>
+
+<div onWheel="{{onWheel}}" style="position: relative; width: 100%; max-width: 676px; aspect-ratio: 1 / 1; container-type: inline-size; contain: layout style">
+<div aria-hidden="true" class="riso" style="position: absolute; left: 1%; top: 1%; width: 98%; height: 98%; will-change: transform; border-radius: 50%; background-image: radial-gradient(#E8AFA5 2px, transparent 2.4px); background-size: 9px 9px; -webkit-mask-image: radial-gradient(circle, transparent 0%, transparent 60%, black 74%, transparent 100%); mask-image: radial-gradient(circle, transparent 0%, transparent 60%, black 74%, transparent 100%)"></div>
+<div class="{{spiralCls}}" style="position: absolute; inset: 0; will-change: transform">
+<svg viewBox="0 0 800 800" role="img" aria-label="{{spiralAria}}" onClick="{{spiralClick}}" onMouseMove="{{spiralMove}}" onMouseLeave="{{spiralLeave}}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; cursor: pointer">
+<defs><clipPath id="rsClip3"><circle cx="400" cy="400" r="338"></circle></clipPath></defs>
+<sc-for list="{{cornerFlowers}}" as="f" hint-placeholder-count="12">
+<g transform="{{f.tf}}" aria-hidden="true">
+<ellipse cx="-16" cy="14" rx="11" ry="4.5" transform="rotate(-38 -16 14)" style="fill: #1E6A44"></ellipse>
+<ellipse cx="16" cy="14" rx="11" ry="4.5" transform="rotate(38 16 14)" style="fill: #1E6A44"></ellipse>
+<g style="fill: #9E2B25; stroke: #FBFAF5; stroke-width: 1.3px">
+<circle cx="11.5" cy="0" r="8.5"></circle><circle cx="8.1" cy="8.1" r="8.5"></circle><circle cx="0" cy="11.5" r="8.5"></circle><circle cx="-8.1" cy="8.1" r="8.5"></circle><circle cx="-11.5" cy="0" r="8.5"></circle><circle cx="-8.1" cy="-8.1" r="8.5"></circle><circle cx="0" cy="-11.5" r="8.5"></circle><circle cx="8.1" cy="-8.1" r="8.5"></circle>
+<circle cx="0" cy="-5.5" r="5.5"></circle><circle cx="5.2" cy="-1.7" r="5.5"></circle><circle cx="3.2" cy="4.4" r="5.5"></circle><circle cx="-3.2" cy="4.4" r="5.5"></circle><circle cx="-5.2" cy="-1.7" r="5.5"></circle>
+</g>
+<circle cx="0" cy="0" r="2.6" style="fill: #FBFAF5"></circle>
+</g>
+</sc-for>
+<circle cx="400" cy="400" r="338" style="fill: #FFFEFA"></circle>
+<g style="clip-path: url(#rsClip3)">
+<path d="{{laneD}}" style="fill: #9E2B25"></path>
+<path d="{{laneFD}}" style="fill: #FBEDE8; stroke: #9E2B25; stroke-width: 1.5px"></path>
+<path d="{{ornD}}" style="fill: none; stroke: #FFFEFA; stroke-width: 2.6px"></path>
+<path d="{{stripD}}" style="fill: #9E2B25"></path>
+<path d="{{tl.paper}}" style="fill: #FFFEFA"></path>
+<path d="{{tl.before}}" style="fill: #F7EFE6"></path>
+<path d="{{tl.future}}" style="fill: #FBEDE8"></path>
+<path d="{{tl.dim}}" style="fill: #EEE7DA"></path>
+<path d="{{tl.trad}}" style="fill: #DCEBDD"></path>
+<path d="{{tl.pinned}}" style="fill: #F6DE9F"></path>
+<path d="{{tl.fest}}" style="fill: #D2564B"></path>
+<path d="{{tl.sel}}" style="fill: #F3E3BE"></path>
+<filter id="threadGlow3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter>
+<path class="threadGlow" d="{{threadD}}" filter="url(#threadGlow3)" style="fill: none; stroke: #FFC21A; stroke-width: 18px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none"></path>
+<path d="{{threadD}}" style="fill: none; stroke: #33261D; stroke-width: 7.5px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none"></path>
+<path d="{{threadD}}" style="fill: none; stroke: #FFC21A; stroke-width: 4.5px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none"></path>
+<path d="{{threadD}}" style="fill: none; stroke: #FFF4C2; stroke-width: 1.4px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none"></path>
+<sc-if value="{{showThreads}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{spokes}}" as="s" hint-placeholder-count="6">
+<line x1="{{s.x1}}" y1="{{s.y1}}" x2="{{s.x2}}" y2="{{s.y2}}" style="stroke: #9E2B25; stroke-width: 1.2px; stroke-dasharray: 2 6; opacity: 0.45; pointer-events: none"></line>
+</sc-for>
+</sc-if>
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+<path d="{{selPath}}" style="fill: none; stroke: #33261D; stroke-width: 3px; pointer-events: none"></path>
+</sc-if>
+<g style="pointer-events: none">
+<path d="{{tabD}}" style="fill: #FFFFFF; stroke: #9E2B25; stroke-width: 1.2px"></path>
+<path d="{{tabZD}}" style="fill: #1E6A44; stroke: #1E6A44; stroke-width: 1.2px"></path>
+<path d="{{glyphD}}" style="fill: #FFFEFA; stroke: #1E6A44; stroke-width: 1.5px"></path>
+<path d="{{pinD.red}}" style="fill: #9E2B25; stroke: #FFFEFA; stroke-width: 1px"></path>
+<path d="{{pinD.brown}}" style="fill: #6A4628; stroke: #FFFEFA; stroke-width: 1px"></path>
+<path d="{{pinD.green}}" style="fill: #1E6A44; stroke: #FFFEFA; stroke-width: 1px"></path>
+<sc-if value="{{seal.show}}" hint-placeholder-val="{{ false }}">
+<rect x="{{seal.x}}" y="{{seal.y}}" width="{{seal.s}}" height="{{seal.s}}" rx="2" transform="rotate({{seal.rot}} {{seal.cx}} {{seal.cy}})" style="fill: #9E2B25; stroke: #D9A13B; stroke-width: 2px; pointer-events: none"></rect>
+</sc-if>
+</g>
+<sc-if value="{{now.show}}" hint-placeholder-val="{{ true }}">
+<line x1="{{now.x}}" y1="{{now.y}}" x2="{{now.ex2}}" y2="{{now.ey2}}" style="stroke: #33261D; stroke-width: 2.8px; stroke-linecap: round; pointer-events: none"></line>
+<circle class="nowPulse" cx="{{now.x}}" cy="{{now.y}}" r="{{now.r2}}" style="fill: none; stroke: #D9A13B; pointer-events: none"></circle>
+<circle cx="{{now.x}}" cy="{{now.y}}" r="{{now.r2}}" style="fill: #D9A13B; stroke: #33261D; stroke-width: 1.5px; pointer-events: none"></circle>
+<circle cx="{{now.x}}" cy="{{now.y}}" r="{{now.r}}" style="fill: #33261D; stroke: #FFFEFA; stroke-width: 2.5px; pointer-events: none"></circle>
+</sc-if>
+</g>
+<circle cx="400" cy="400" r="{{med.halo}}" style="fill: none; stroke: #FFFEFA; stroke-width: 8px; opacity: 0.9; pointer-events: none"></circle>
+<circle cx="400" cy="400" r="{{med.r}}" style="fill: #FFFEFA; stroke: #9E2B25; stroke-width: 3px; pointer-events: none"></circle>
+<circle cx="400" cy="400" r="{{med.r2}}" style="fill: none; stroke: #9E2B25; stroke-width: 1.2px; pointer-events: none"></circle>
+<circle cx="400" cy="400" r="341" style="fill: none; stroke: #9E2B25; stroke-width: 2.5px; pointer-events: none"></circle>
+<circle cx="400" cy="400" r="347" style="fill: none; stroke: #9E2B25; stroke-width: 1px; pointer-events: none"></circle>
+<g aria-hidden="true" style="pointer-events: none">
+<circle cx="400" cy="400" r="369" style="fill: none; stroke: #9E2B25; stroke-width: 28px"></circle>
+<circle cx="400" cy="400" r="358" style="fill: none; stroke: #FFFEFA; stroke-width: 1.2px; opacity: 0.8"></circle>
+<circle cx="400" cy="400" r="380" style="fill: none; stroke: #FFFEFA; stroke-width: 1.2px; opacity: 0.8"></circle>
+<circle cx="400" cy="400" r="388" style="fill: none; stroke: #9E2B25; stroke-width: 1.6px"></circle>
+<sc-for list="{{ringDots}}" as="d" hint-placeholder-count="36">
+<circle cx="{{d.x}}" cy="{{d.y}}" r="{{d.r}}" style="fill: {{d.fill}}; stroke: #FFFEFA; stroke-width: {{d.sw}}px"></circle>
+</sc-for>
+</g>
+</svg>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; clip-path: circle(42.2% at 50% 50%)">
+<sc-for list="{{txt}}" as="t" hint-placeholder-count="60">
+<span style="position: absolute; left: 0; top: 0; transform: translate(calc({{t.l}}cqw - 50%), calc({{t.t}}cqw - 50%)) rotate({{t.rot}}deg) scale({{t.sc}}); font-family: {{t.font}}; font-size: 4cqw; font-weight: {{t.w}}; color: {{t.fill}}; opacity: {{t.op}}; line-height: 1; white-space: nowrap">{{t.text}}</span>
+</sc-for>
+</div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none">
+<sc-for list="{{ringTxt}}" as="t" hint-placeholder-count="12">
+<span style="position: absolute; left: {{t.l}}%; top: {{t.t}}%; transform: translate(-50%, -50%) rotate({{t.rot}}deg); font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 1.55cqw; color: #9E2B25; line-height: 1">{{t.ch}}</span>
+</sc-for>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 50.3%; width: 16%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%); pointer-events: none">
+<img src="assets/zodiac/rat.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o0}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/ox.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o1}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/tiger.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o2}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/rabbit.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o3}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/dragon.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o4}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/snake.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o5}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/horse.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o6}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/goat.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o7}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/monkey.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o8}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/rooster.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o9}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/dog.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o10}}; transition: opacity 800ms ease">
+<img src="assets/zodiac/pig.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: {{zop.o11}}; transition: opacity 800ms ease">
+</div>
+</div>
+<div aria-hidden="true" class="speck" style="position: absolute; inset: 0; pointer-events: none; clip-path: circle(49% at 50% 50%); transform: translateZ(0)"></div>
+<sc-if value="{{now.show}}" hint-placeholder-val="{{ true }}">
+<span aria-hidden="true" style="position: absolute; left: {{now.lx}}%; top: {{now.ly}}%; transform: translate(-50%, -50%); background: #33261D; color: #FFFEFA; border: 2px solid #D9A13B; border-radius: 999px; padding: 0.7cqw 1.6cqw; font-family: 'Coustard', serif; font-size: 1.8cqw; letter-spacing: 0.06em; white-space: nowrap; pointer-events: none; z-index: 30"><span style="font-family: 'Noto Serif TC', serif; font-weight: 900">今天</span> · TODAY · NOV 18</span>
+</sc-if>
+<sc-if value="{{tip.show}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: {{tip.l}}%; top: {{tip.t}}%; transform: {{tip.tf}}; width: max-content; max-width: 280px; z-index: 6; pointer-events: none; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{tip.items}}" as="p" hint-placeholder-count="1">
+<div style="position: relative; background: #FFFFFF; transform: rotate({{p.rot}}deg); box-shadow: 0 1px 2px rgba(51, 38, 29, 0.2), 0 8px 12px -6px rgba(51, 38, 29, 0.35)">
+<span style="position: absolute; left: 0; top: 7px; width: 22px; height: 8px; background: #1E6A44"></span>
+<span style="position: absolute; left: 0; bottom: 7px; width: 22px; height: 8px; background: #1E6A44"></span>
+<span style="position: absolute; right: 0; top: 40%; width: 6px; height: 11px; background: #1E6A44"></span>
+<div style="padding: 9px 18px 8px 30px; text-align: center; color: #9E2B25; font-family: 'Archivo Narrow', 'Nunito', sans-serif">
+<div style="font-size: 11px; letter-spacing: 0.1em">{{tip.title}}</div>
+<div style="font-size: 16px; font-weight: 600; line-height: 1.2; white-space: normal">{{p.text}}</div>
+<div style="font-size: 12px; margin-top: 3px">from {{p.name}} · {{p.kind}}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div class="controls" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 12px; border-top: 2px solid #9E2B25; border-bottom: 2px solid #9E2B25; background-image: radial-gradient(#F1CBC3 1.3px, transparent 1.7px); background-size: 6px 6px">
+<button type="button" onClick="{{zoomIn}}" style="min-height: 44px; padding: 6px 12px; background: #FFFEFA; color: #9E2B25; border: 2px solid #9E2B25; cursor: pointer; font-family: 'Coustard', serif; font-size: 14px; display: flex; align-items: center; gap: 6px">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 2.4px; stroke-linecap: round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L21 21 M10.5 7.5 V13.5 M7.5 10.5 H13.5"></path></svg>EARLIER</button>
+<div class="zoom-slider" style="flex: 1 1 160px; min-width: 0; display: flex; flex-direction: column">
+<label for="zoomRiso" style="font-size: 11px; font-weight: 900; letter-spacing: 0.1em; color: #9E2B25; text-align: center">TRAVEL THROUGH THE TURNS</label>
+<input id="zoomRiso" type="range" min="1" max="{{zmax}}" step="0.01" value="{{z}}" onChange="{{onSlide}}" style="width: 100%; accent-color: #9E2B25; min-height: 28px">
+</div>
+<button type="button" onClick="{{zoomOut}}" style="min-height: 44px; padding: 6px 12px; background: #FFFEFA; color: #9E2B25; border: 2px solid #9E2B25; cursor: pointer; font-family: 'Coustard', serif; font-size: 14px; display: flex; align-items: center; gap: 6px">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 2.4px; stroke-linecap: round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L21 21 M7.5 10.5 H13.5"></path></svg>AHEAD</button>
+<button type="button" onClick="{{toNow}}" class="riso" style="min-height: 44px; padding: 6px 14px; background: #1E6A44; color: #FBFAF5; border: 2px solid #1E6A44; cursor: pointer; font-family: 'Coustard', serif; font-size: 14px"><span style="font-family: 'Noto Serif TC', serif; font-weight: 900">今</span> BACK TO NOW</button>
+</div>
+</main>
+
+<div class="col-side" style="flex: 0 1 340px; max-width: 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section aria-label="Almanac page for {{alm.aria}}" style="position: relative; display: flex; flex-direction: column; border: 3px solid #9E2B25; background: #FFFEFA; padding-top: 40px; margin-bottom: 14px; box-shadow: 0 3px 0 -1px #F4F0E6, 0 4px 0 0 #D9C7A3, 0 7px 0 -1px #F4F0E6, 0 8px 0 0 #D9C7A3, 0 11px 0 -1px #F4F0E6, 0 12px 0 0 #D9C7A3, 0 18px 14px -8px rgba(51, 38, 29, 0.28)">
+<div aria-hidden="true" class="riso" style="position: absolute; left: -3px; right: -3px; top: -3px; height: 26px; background: #9E2B25; display: flex; justify-content: center; align-items: center; gap: 120px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #FBFAF5; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45)"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #FBFAF5; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45)"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 23px; filter: drop-shadow(0 1.5px 0 #CBB994)"><div style="height: 7px; background: #FFFEFA; clip-path: polygon(0 0, 100% 0, 100% 40%, 96% 100%, 92% 30%, 88% 90%, 84% 20%, 80% 80%, 76% 35%, 72% 100%, 68% 25%, 64% 85%, 60% 30%, 56% 95%, 52% 20%, 48% 80%, 44% 35%, 40% 100%, 36% 25%, 32% 85%, 28% 30%, 24% 95%, 20% 20%, 16% 80%, 12% 35%, 8% 100%, 4% 30%, 0 70%)"></div></div>
+<div aria-hidden="true" style="position: absolute; left: 8px; right: 8px; top: 33px; border-top: 2px dotted #C9B48A"></div>
+
+<div class="{{alm.inCls}}" style="display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 2px 4px; border-bottom: 2px solid #9E2B25">
+<button type="button" onClick="{{alm.prev}}" aria-label="Previous day" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round"><path d="M15 5 L8 12 L15 19"></path></svg></button>
+<span style="flex: 1; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-width: 0">
+<span style="font-family: 'Coustard', serif; font-weight: 900; font-size: 20px; color: #9E2B25; white-space: nowrap">{{alm.year}} {{alm.month}}</span>
+<span style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 16px; color: #1E6A44; white-space: nowrap">{{alm.barRight}}</span>
+</span>
+<button type="button" onClick="{{alm.next}}" aria-label="Next day, tears off this page" style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round"><path d="M9 5 L16 12 L9 19"></path></svg></button>
+</div>
+<div style="position: relative; display: flex; justify-content: center; padding: 14px 0 4px">
+<div aria-hidden="true" class="riso alm-halo" style="position: absolute; left: 50%; top: 50%; width: 240px; height: 240px; transform: translate(-50%, -46%); border-radius: 50%; background-image: radial-gradient(#E8AFA5 2.2px, transparent 2.6px); background-size: 8px 8px; -webkit-mask-image: radial-gradient(circle, black 0%, black 45%, transparent 72%); mask-image: radial-gradient(circle, black 0%, black 45%, transparent 72%)"></div>
+<span style="position: relative; display: inline-block"><span class="riso" style="display: inline-block"><span class="mis mg alm-day" data-t="{{alm.day}}" style="font-family: 'Coustard', serif; font-weight: 900; font-size: 210px; line-height: 0.88; color: #9E2B25; letter-spacing: -0.04em">{{alm.day}}</span></span>
+<sc-if value="{{alm.isToday}}" hint-placeholder-val="{{ true }}">
+<svg aria-hidden="true" viewBox="0 0 200 160" style="position: absolute; left: 50%; top: 52%; width: 128%; height: auto; transform: translate(-50%, -50%) rotate(-4deg); pointer-events: none; overflow: visible; z-index: 2"><path d="M52 22 C 112 2, 192 24, 188 84 C 184 146, 70 160, 26 112 C -4 76, 30 26, 108 14 C 130 11, 150 14, 160 20" style="fill: none; stroke: #E8B83A; stroke-width: 3.2px; stroke-linecap: round; opacity: 0.55; mix-blend-mode: multiply"></path></svg>
+</sc-if>
+</span>
+<svg aria-hidden="true" width="58" height="58" viewBox="-30 -30 60 60" style="position: absolute; left: 18px; bottom: 6px"><ellipse cx="-16" cy="14" rx="11" ry="4.5" transform="rotate(-38 -16 14)" style="fill: #1E6A44"></ellipse><ellipse cx="16" cy="14" rx="11" ry="4.5" transform="rotate(38 16 14)" style="fill: #1E6A44"></ellipse><g style="fill: #9E2B25; stroke: #FBFAF5; stroke-width: 1.3px"><circle cx="11.5" cy="0" r="8.5"></circle><circle cx="8.1" cy="8.1" r="8.5"></circle><circle cx="0" cy="11.5" r="8.5"></circle><circle cx="-8.1" cy="8.1" r="8.5"></circle><circle cx="-11.5" cy="0" r="8.5"></circle><circle cx="-8.1" cy="-8.1" r="8.5"></circle><circle cx="0" cy="-11.5" r="8.5"></circle><circle cx="8.1" cy="-8.1" r="8.5"></circle><circle cx="0" cy="-5.5" r="5.5"></circle><circle cx="5.2" cy="-1.7" r="5.5"></circle><circle cx="3.2" cy="4.4" r="5.5"></circle><circle cx="-3.2" cy="4.4" r="5.5"></circle><circle cx="-5.2" cy="-1.7" r="5.5"></circle></g><circle r="2.6" style="fill: #FBFAF5"></circle></svg>
+</div>
+<div class="riso" style="text-align: center; font-family: 'Coustard', serif; font-weight: 900; font-size: 20px; color: #1E6A44; letter-spacing: 0.06em; padding: 6px 0 12px">{{alm.weekday}}</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid #9E2B25">
+<div style="position: relative; overflow: hidden; padding: 10px; border-right: 1.5px solid #9E2B25; display: flex; flex-direction: column; gap: 6px">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#CFE2D5 1.6px, transparent 2px); background-size: 7px 7px; -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%); mask-image: linear-gradient(to top, black 0%, transparent 80%)"></div>
+<span class="riso" style="position: relative; align-self: flex-start; background: #1E6A44; color: #FBFAF5; padding: 2px 10px; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 18px">宜 <span style="font-family: 'Coustard', serif; font-size: 12px">GOOD</span></span>
+<span style="position: relative; font-size: 13px; font-weight: 700; line-height: 1.35">{{alm.good}}</span>
+</div>
+<div style="position: relative; overflow: hidden; padding: 10px; display: flex; flex-direction: column; gap: 6px">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#F1CBC3 1.6px, transparent 2px); background-size: 7px 7px; -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%); mask-image: linear-gradient(to top, black 0%, transparent 80%)"></div>
+<span class="riso" style="position: relative; align-self: flex-start; background: #9E2B25; color: #FBFAF5; padding: 2px 10px; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 18px">忌 <span style="font-family: 'Coustard', serif; font-size: 12px">AVOID</span></span>
+<span style="position: relative; font-size: 13px; font-weight: 700; line-height: 1.35">{{alm.avoid}}</span>
+</div>
+</div>
+<div class="riso" style="position: relative; overflow: hidden; background: #9E2B25; color: #FBFAF5; padding: 9px 10px; text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 0.08em">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#FBFAF5 1.5px, transparent 1.9px); background-size: 6px 6px; opacity: 0.35; -webkit-mask-image: linear-gradient(to right, black 0%, transparent 45%, transparent 55%, black 100%); mask-image: linear-gradient(to right, black 0%, transparent 45%, transparent 55%, black 100%)"></div>
+<span style="position: relative">{{alm.fest}}</span>
+</div>
+</div>
+
+<sc-if value="{{tear.show}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" class="{{tear.cls}}" style="position: absolute; left: -3px; right: -3px; top: 29px; bottom: -3px; box-sizing: border-box; background: #FFFEFA; border: 3px solid #9E2B25; border-top: none; display: flex; flex-direction: column; transform-origin: 0% 0%; z-index: 3; pointer-events: none; padding-top: 11px; clip-path: polygon(0% 5px, 3% 1px, 6% 6px, 9% 2px, 12% 7px, 15% 1px, 18% 5px, 21% 0px, 24% 6px, 27% 2px, 30% 7px, 33% 1px, 36% 5px, 39% 2px, 42% 6px, 45% 0px, 48% 5px, 51% 2px, 54% 7px, 57% 1px, 60% 5px, 63% 2px, 66% 6px, 69% 0px, 72% 5px, 75% 2px, 78% 7px, 81% 1px, 84% 5px, 87% 2px, 90% 6px, 93% 1px, 96% 5px, 100% 2px, 100% 100%, 0% 100%)">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 4px; padding: 2px 4px; border-bottom: 2px solid #9E2B25">
+<span style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; background: transparent; border: none; "><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round"><path d="M15 5 L8 12 L15 19"></path></svg></span>
+<span style="flex: 1; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-width: 0">
+<span style="font-family: 'Coustard', serif; font-weight: 900; font-size: 20px; color: #9E2B25; white-space: nowrap">{{tear.year}} {{tear.month}}</span>
+<span style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 16px; color: #1E6A44; white-space: nowrap">{{tear.barRight}}</span>
+</span>
+<span style="width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; background: transparent; border: none; "><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: #9E2B25; stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round"><path d="M9 5 L16 12 L9 19"></path></svg></span>
+</div>
+<div style="position: relative; display: flex; justify-content: center; padding: 14px 0 4px">
+<div aria-hidden="true" class="riso alm-halo" style="position: absolute; left: 50%; top: 50%; width: 240px; height: 240px; transform: translate(-50%, -46%); border-radius: 50%; background-image: radial-gradient(#E8AFA5 2.2px, transparent 2.6px); background-size: 8px 8px; -webkit-mask-image: radial-gradient(circle, black 0%, black 45%, transparent 72%); mask-image: radial-gradient(circle, black 0%, black 45%, transparent 72%)"></div>
+<span style="position: relative; display: inline-block"><span class="riso" style="display: inline-block"><span class="mis mg alm-day" data-t="{{tear.day}}" style="font-family: 'Coustard', serif; font-weight: 900; font-size: 210px; line-height: 0.88; color: #9E2B25; letter-spacing: -0.04em">{{tear.day}}</span></span>
+<sc-if value="{{tear.isToday}}" hint-placeholder-val="{{ true }}">
+<svg aria-hidden="true" viewBox="0 0 200 160" style="position: absolute; left: 50%; top: 52%; width: 128%; height: auto; transform: translate(-50%, -50%) rotate(-4deg); pointer-events: none; overflow: visible; z-index: 2"><path d="M52 22 C 112 2, 192 24, 188 84 C 184 146, 70 160, 26 112 C -4 76, 30 26, 108 14 C 130 11, 150 14, 160 20" style="fill: none; stroke: #E8B83A; stroke-width: 3.2px; stroke-linecap: round; opacity: 0.55; mix-blend-mode: multiply"></path></svg>
+</sc-if>
+</span>
+<svg aria-hidden="true" width="58" height="58" viewBox="-30 -30 60 60" style="position: absolute; left: 18px; bottom: 6px"><ellipse cx="-16" cy="14" rx="11" ry="4.5" transform="rotate(-38 -16 14)" style="fill: #1E6A44"></ellipse><ellipse cx="16" cy="14" rx="11" ry="4.5" transform="rotate(38 16 14)" style="fill: #1E6A44"></ellipse><g style="fill: #9E2B25; stroke: #FBFAF5; stroke-width: 1.3px"><circle cx="11.5" cy="0" r="8.5"></circle><circle cx="8.1" cy="8.1" r="8.5"></circle><circle cx="0" cy="11.5" r="8.5"></circle><circle cx="-8.1" cy="8.1" r="8.5"></circle><circle cx="-11.5" cy="0" r="8.5"></circle><circle cx="-8.1" cy="-8.1" r="8.5"></circle><circle cx="0" cy="-11.5" r="8.5"></circle><circle cx="8.1" cy="-8.1" r="8.5"></circle><circle cx="0" cy="-5.5" r="5.5"></circle><circle cx="5.2" cy="-1.7" r="5.5"></circle><circle cx="3.2" cy="4.4" r="5.5"></circle><circle cx="-3.2" cy="4.4" r="5.5"></circle><circle cx="-5.2" cy="-1.7" r="5.5"></circle></g><circle r="2.6" style="fill: #FBFAF5"></circle></svg>
+</div>
+<div class="riso" style="text-align: center; font-family: 'Coustard', serif; font-weight: 900; font-size: 20px; color: #1E6A44; letter-spacing: 0.06em; padding: 6px 0 12px">{{tear.weekday}}</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid #9E2B25">
+<div style="position: relative; overflow: hidden; padding: 10px; border-right: 1.5px solid #9E2B25; display: flex; flex-direction: column; gap: 6px">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#CFE2D5 1.6px, transparent 2px); background-size: 7px 7px; -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%); mask-image: linear-gradient(to top, black 0%, transparent 80%)"></div>
+<span class="riso" style="position: relative; align-self: flex-start; background: #1E6A44; color: #FBFAF5; padding: 2px 10px; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 18px">宜 <span style="font-family: 'Coustard', serif; font-size: 12px">GOOD</span></span>
+<span style="position: relative; font-size: 13px; font-weight: 700; line-height: 1.35">{{tear.good}}</span>
+</div>
+<div style="position: relative; overflow: hidden; padding: 10px; display: flex; flex-direction: column; gap: 6px">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#F1CBC3 1.6px, transparent 2px); background-size: 7px 7px; -webkit-mask-image: linear-gradient(to top, black 0%, transparent 80%); mask-image: linear-gradient(to top, black 0%, transparent 80%)"></div>
+<span class="riso" style="position: relative; align-self: flex-start; background: #9E2B25; color: #FBFAF5; padding: 2px 10px; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 18px">忌 <span style="font-family: 'Coustard', serif; font-size: 12px">AVOID</span></span>
+<span style="position: relative; font-size: 13px; font-weight: 700; line-height: 1.35">{{tear.avoid}}</span>
+</div>
+</div>
+<div class="riso" style="position: relative; overflow: hidden; background: #9E2B25; color: #FBFAF5; padding: 9px 10px; text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 0.08em">
+<div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#FBFAF5 1.5px, transparent 1.9px); background-size: 6px 6px; opacity: 0.35; -webkit-mask-image: linear-gradient(to right, black 0%, transparent 45%, transparent 55%, black 100%); mask-image: linear-gradient(to right, black 0%, transparent 45%, transparent 55%, black 100%)"></div>
+<span style="position: relative">{{tear.fest}}</span>
+</div>
+</div>
+</sc-if>
+</section>
+
+<section aria-label="Pinned here" style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px; border-bottom: 3px double #9E2B25; padding-bottom: 4px">
+<h2 class="riso" style="margin: 0; font-family: 'Coustard', serif; font-weight: 900; font-size: 20px; color: #9E2B25">Pinned here</h2>
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #6B5745; text-align: right">{{info.short}}</span>
+</div>
+<sc-if value="{{selTrad.show}}" hint-placeholder-val="{{ false }}">
+<div class="riso" style="display: flex; align-items: center; gap: 8px; color: #1E6A44; font-size: 13px; font-weight: 800"><span aria-hidden="true" style="width: 26px; height: 26px; flex: none; border-radius: 50%; border: 2px solid #1E6A44; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 13px">{{selTrad.g}}</span>{{selTrad.name}} returns here every turn</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; padding: 4px 0 8px">
+<sc-for list="{{slips}}" as="p" hint-placeholder-count="2">
+<div style="position: relative; margin: {{p.mt}}px {{p.mr}}px 0 {{p.ml}}px; transform: rotate({{p.rot}}deg); background: #FFFFFF; box-shadow: 0 1px 2px rgba(51, 38, 29, 0.18), 0 9px 12px -6px rgba(51, 38, 29, 0.32); z-index: {{p.zi}}">
+<span aria-hidden="true" style="position: absolute; left: 0; top: 10px; width: 32px; height: 11px; background: #1E6A44"></span>
+<span aria-hidden="true" style="position: absolute; left: 0; bottom: 10px; width: 32px; height: 11px; background: #1E6A44"></span>
+<span aria-hidden="true" style="position: absolute; right: 0; top: 42%; width: 8px; height: 15px; background: #1E6A44"></span>
+<div class="riso" style="padding: 15px 26px 12px 42px; text-align: center; color: #9E2B25; font-family: 'Archivo Narrow', 'Nunito', sans-serif">
+<sc-if value="{{p.hasZh}}" hint-placeholder-val="{{ false }}">
+<div style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 20px; line-height: 1.2">{{p.zh}}</div>
+</sc-if>
+<p style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.2">{{p.text}}</p>
+<div style="margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px"><span>{{p.from}}</span><sc-if value="{{p.hasSeal}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="width: 20px; height: 20px; background: {{p.color}}; color: #FFFFFF; border-radius: {{p.radius}}; display: inline-flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 11px">{{p.ch}}</span></sc-if><span>{{p.kindLabel}}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+<div style="border: 2px solid #9E2B25; display: flex; align-items: stretch">
+<div class="riso" style="position: relative; overflow: hidden; writing-mode: vertical-rl; background: #9E2B25; color: #FBFAF5; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 22px; letter-spacing: 0.15em; padding: 10px 8px"><span aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(#FBFAF5 1.5px, transparent 1.9px); background-size: 6px 6px; opacity: 0.3; -webkit-mask-image: linear-gradient(to bottom, transparent 40%, black 100%); mask-image: linear-gradient(to bottom, transparent 40%, black 100%)"></span><span style="position: relative">落地生根</span></div>
+<div style="padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+<span style="font-size: 11px; font-weight: 900; letter-spacing: 0.1em; color: #9E2B25">A SAYING ON THE SPIRAL</span>
+<span style="font-size: 14px; font-weight: 700; line-height: 1.35">Where the seed falls, it grows roots.</span>
+<span style="font-size: 12px; color: #6B5745">pinned by Agong, 2010</span>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+</template>
+<script src="js/runtime.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
